@@ -1,0 +1,2 @@
+Observation:Observation means the row of data in the dataset,each row represent individual record of data.For example,in this dataset, each row represent 5 different peopel and their correspond data, so the observation are these 5 people.
+Variable:Variable means the culunms of data in the dataset,each colunms represent individual feature of the observations. For example, in this datset, each colunms represent different correspond attribute of these people. Such as name,age and city.
