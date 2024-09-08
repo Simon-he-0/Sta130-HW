@@ -1,0 +1,9 @@
+df.shape: Displays the total number of rows (including those with missing values).
+
+df.describe(): Provides the count of non-null values for each numeric column. This count will be less than the total number of rows if there are missing values in that column.
+
+Explanation: 
+
+df.shape shows there are 5 rows.
+
+The count for age in df.describe() is 4, reflecting that there is 1 missing value in the age column.

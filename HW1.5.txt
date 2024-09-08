@@ -1,0 +1,9 @@
+Attribute: 
+An attribute refers some proporties of an object which provide some characteristics and information about the object without parentheses require.
+
+df.shape returns a tuple representing the dimensions of the DataFrame which simply returns the current value of the property and does not perform any computation.
+
+Methods:
+A method is a function that relevant to an object. Methods execute operations on the object and usually return a result with parentheses require when called. 
+
+df.describe() computes a summary statistics of the DataFrame's numeric columns. The parentheses represent it's a method that process a computation or action.

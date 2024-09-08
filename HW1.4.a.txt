@@ -1,0 +1,11 @@
+df.shape: This gives the total number of rows and columns in the DataFrame, regardless of the data types of the columns. For example, df.shape might return (5, 4) if there are 5 rows and 4 columns in total.
+
+df.describe(): By default, df.describe() only summarizes numeric columns. Non-numeric (categorical or object-type) columns are excluded from the summary statistics output. Therefore, if your DataFrame has non-numeric columns, they will not be included in the describe() output unless explicitly specified.
+
+Explanantion: 
+
+df.shape shows 4 columns, but df.describe() only includes id and age because name and city are non-numeric and therefore not analyzed by default.
+
+df.describe() for Numeric Columns: The count value in df.describe() for numeric columns represents the number of non-null (non-missing) entries in those columns.
+
+For columns like age that have missing values, the count will be less than the total number of rows if any values are missing.
