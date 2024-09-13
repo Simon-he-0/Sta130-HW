@@ -1,0 +1,52 @@
+7.
+(1). Use case: When I have a data set with multiple columns and I only want to reserve the entire complete row.
+Example: Here is a data set which is a DataFrame df with customer data:
+CustomerID-------Age-------Income-------PurchaseAmount
+1----------------25---------50000------------200
+2--------------- NaN--------60000------------150
+3----------------30----------NaN-------------300
+4----------------40---------70000------------NaN
+
+If I use the df.dropna(), then I will get a result in:
+CustomerID-------Age-------Income-------PurchaseAmount
+1----------------25---------50000------------200
+
+In general, df.dropna() is used to delate uncomplete data row and reserve the complete row. However, del df['col'] is used to delete the entire column and reserve the entire complete columns.So in the case of above,df.dropna() might be peferred over using del df['col'].
+
+ 
+(2). Use case: When I have a dataset with some columns are largely empty or contain a high proportion of missing values.
+Example: Here is a expansion of a data set which provided above:
+CustomerID-------Age-------Income-------PurchaseAmount-------ExtraInfo
+1----------------25---------50000------------200----------------NaN
+2--------------- NaN--------60000------------150----------------NaN
+3----------------30----------NaN-------------300----------------NaN
+4----------------40---------70000------------NaN----------------NaN
+
+If I use the del df['col'], then I will get a result in:
+CustomerID-------Age-------Income-------PurchaseAmount
+1----------------25---------50000------------200
+2--------------- NaN--------60000------------150
+3----------------30----------NaN-------------300
+4----------------40---------70000------------NaN
+
+In general, del df['col'] is used to delate the columns which largely empty or contain a high proportion of missing values.However,df.dropna() is used to delete uncomplete data row and reserve the complete row.So in the case of above,del df['col'] might be peferred over using df.dropna().
+
+(3). If I use the del df['col'] first and then use the df.dropna.It can reduces the dimensionality of my dataset and potentially making df.dropna() more efficient by dealing with fewer columns.For an instance,if my data set has many columns,but only a few of them have significant missing values.For example,If I have a data set with a few of columns have significant missing values,then I use the del df['col'] before the df.dropna which can delate the irrelevant columns first,thus I can optimizing the performance and focus of data cleaning.
+
+(4). Given a full data set which provided above:
+CustomerID-------Name-------Age-------Income-------PurchaseAmount-------ExtraInfo
+1----------------Alice------25---------50000------------200----------------NaN
+2----------------Bob--------NaN--------60000------------150----------------NaN
+3----------------Caro-------l30---------NaN-------------300----------------NaN
+4----------------Dave-------40---------70000------------NaN----------------NaN
+
+Process of removing:
+del df['ExtraInfo']
+df = df.dropna()
+
+Then the result is:
+CustomerID-------Name-------Age-------Income-------PurchaseAmount
+1----------------Alice------25---------50000------------200
+Justification:
+del df['ExtraInfo']:By removing the ExtraInfo column first,I can simplify the dataset and avoid unnecessary computations.
+df = df.dropna():After dealing with irrelevant columns,the using of df.dropna() can reserve the completely data row are kept,which is critical for analyses that require a complete dataset.

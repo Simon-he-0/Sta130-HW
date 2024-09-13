@@ -1,0 +1,36 @@
+6.
+The df.describe() method in pandas provides a summary of statistics for numeric columns in a DataFrame.
+
+Count:
+
+Definition: The number of non-null (non-missing) entries in the column.
+Purpose: Helps to understand the amount of data available for each variable. If the count is less than the total number of rows in the DataFrame, it indicates that there are missing values in that column.
+
+Mean:
+
+Definition: The average of all the non-null values in the column.
+Purpose: Provides a measure of the central tendency of the data. It is calculated as the sum of all values divided by the count of non-null values.
+Standard Deviation (std):
+
+Definition: A measure of the dispersion or spread of the values in the column.
+Purpose: Indicates how much the values deviate from the mean. A higher standard deviation means that the values are more spread out from the mean.
+Minimum (min):
+
+Definition: The smallest value in the column.
+Purpose: Provides the lowest observed value, which helps to understand the range of the data.
+25th Percentile (25%):
+
+Definition: The value below which 25% of the data falls.
+Purpose: This is also known as the first quartile. It provides insight into the lower end of the data distribution.
+50th Percentile (50%):
+
+Definition: The value below which 50% of the data falls, which is also the median.
+Purpose: Represents the middle value of the data distribution, dividing the data into two equal halves. It provides a measure of the central location of the data.
+75th Percentile (75%):
+
+Definition: The value below which 75% of the data falls.
+Purpose: This is also known as the third quartile. It provides insight into the higher end of the data distribution.
+Maximum (max):
+
+Definition: The largest value in the column.
+Purpose: Provides the highest observed value, helping to understand the range of the data.

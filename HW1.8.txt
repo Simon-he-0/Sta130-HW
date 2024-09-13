@@ -1,0 +1,8 @@
+8.
+(1):
+As we know,df.groupby("col1") is use to groups the DataFrame df by unique values in col1. It creates a group for each unique(equal value) value in col1.After it returns a result, we can use ["col2"].describe() to computes descriptive statistics for col2 within each of these groups.For an instance in "tatanic",when we group by a column (e.g., "class")and describe another column (e.g., "age"). Then we can get a output which is several properties description after the classification(group by).
+
+(2):
+Since df.describe() is to provides a summary of statistical statistics for numerical columns in the DataFrame.And also df.groupby("col1")["col2"].describe() is provides a summary of statistical statistics after the groupby.Which also means that count in df.describe() represent the number of non-null values in each column,and count in df.groupby("col1")["col2"].describe() represent the number of non-null values in each groups after the classifications(group by).
+
+(3):As the result that I get.ChatBot---ChatGPT is better for solving the problems.
