@@ -1,0 +1,69 @@
+1. The code is mainly talk about the Monty Hall problemn in a case of the player always switches doors after one losing door is revealed. This code is used to find out the proportion of time the player wins with switch strategy. And the final result of winning probability is about 2/3 probability.
+
+For the each line of the code:
+
+Imports and Initialization:
+import numpy as np
+all_door_options = (1,2,3)  # tuple
+my_door_choice = 1  # 1,2,3
+i_won = 0
+
+Simulation Loop:
+reps = 100000
+
+Random Door Selection:
+for i in range(reps):
+    secret_winning_door = np.random.choice(all_door_options)
+    all_door_options_list = list(all_door_options)
+ 
+Remove the Winning Door:
+all_door_options_list.remove(secret_winning_door)
+
+Remove the Player's Choice:
+try:
+        all_door_options_list.remove(my_door_choice)
+
+Reveal a Losing Door:
+except:
+        pass
+    goat_door_reveal = np.random.choice(all_door_options_list)
+    all_door_options_list.remove(goat_door_reveal)
+
+Adjust Remaining Doors:
+if secret_winning_door != my_door_choice:
+        all_door_options_list.append(secret_winning_door)
+        
+Switch Strategy:
+my_door_choice = all_door_options_list[0]
+
+Check Win Condition:
+if my_door_choice == secret_winning_door:
+        i_won += 1
+        
+Calculate Win Rate:
+i_won/reps
+
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+2. After the comparison,I prefer to the adjustion of ChatBot.Accordong to the code from ChatBot,it's shorter and simpler becasue ChatBot use a list of door instead of tuple. And also it switch the concise logic, ChatBot used next() to directly find the new choice which avoids the need for additional checks or complex conditions.
+
+3. According to correspond .ipynb file.
+
+4. Markovian ChatBot code is basicly builds a simple Markovian ChatBot using two dictionaries: `word_used` for tracking word frequencies and `next_word` for recording how often each word is followed by others. As it iterates through a list of words, it updates these dictionaries to capture word occurrences and transitions. For example, in the sentence "the cat sat on the mat," it counts occurrences of "the" and notes it’s followed by "cat" and "mat." which is the similar things in the video. After training, the ChatBot generates text by starting with a random word and using the recorded frequencies to choose subsequent words, creating text that mimics the original data's style.
+
+5. The first extension is an initial Markovian ChatBot model by incorporating additional context into the word transitions.It's used to improve the ChatBot's contextual awareness by using bigrams instead of single words.And it's also allows model to consider more situation such a pairs of words, leading to more nuanced and coherent text generation.What's more, it can make a prediction based on two preceding words and capture more context.The second extension enhances the original Markovian ChatBot by incorporating character-specific context, allowing the bot to generate dialogue that aligns with individual characters from a dataset. It uses nested dictionaries to track word usage and transitions for each character, creating a more personalized and nuanced response mechanism. As the bot learns word pairs and their following words based on character identity, it can produce interactions that feel more authentic and tailored, improving the overall conversational experience.
+
+6. (1): If we want the ChatBot to be more helpful and effictient, it's a great idea to add some additional information especially some transition words bewteen each idea of the question.And also, add some limitation on our questions can also prevent the over explaination from ChatBot. If we achieve the above two points, we can get the helpful answer from ChatBot immediately.
+(2): If we want to figure out those question without the ChatBot, it will be extremely difficult for us to understand it by ourselves. Even it will get more frustrating and confusion.Becasue ChatBot is really good at using examples to make a explanations,which is really efficiency.And also, it will waste a loads of time to figure out by ourselves.
+(3): ChatBot is extremely useful, here are three following reasons:
+First, ChatBot has has a great logic module, it really good at using example which can help me to understand the code quickly.Second,it can save a loads of time for searching and intergrate all this informations.This means that if I do it by myself, it will take a long time for me to search and intergrate informations. Lastly, the ChatBot is very smart, it can provide accurate answer whatever I ask which is way more efficient than if I do it my myself.
+
+7. I has always been interested in Al(Especially for ChatGPT), I alwasy knew the ChatBot was really advanced and efficiency.And also after these interaction, I have learned more deeply that these AI-driven assistance tools are actually more efficient than I thought they would be in my studies, and that I can use them very easily. I even think that these tools are more efficient than the lectures in class, so I am more inclined to ask the ChatBot than the professor for some questions.
+
+8. (1):In today's fast-developed societies, particularly in data science, skills like learning and adaptability, communication, coding, and statistics are extremely essential. Continuous learning is crucial due to rapid technological advancements, while effective communication helps bridge the gap between technical and non-technical teams. Proficiency in coding is foundational for manipulating data and implementing algorithms, while strong statistical knowledge is necessary for drawing meaningful insights from data. Together, these skills enhance career prospects and contribute significantly to organizational success in leveraging data for strategic decisions.
+(2): For my personal views, scientist is a typical career which I interested in. To pursue a career as a statistician or data scientist, several key skills are essential. A strong foundation in statistical knowledge and data analysis is crucial for interpreting complex datasets. Proficiency in coding languages like Python or R enables effective data manipulation and automation. Additionally, skills in data visualization help communicate insights clearly, while problem-solving and critical thinking are vital for developing data-driven solutions. Effective communication is necessary for conveying findings to non-technical stakeholders, and adaptability is important for keeping up with evolving tools and methodologies. Lastly, collaboration with cross-functional teams enhances project execution, making these skills invaluable for success in the field.
+(3): According to correspond txt file.
+(4): For the expansions of quesiotn 2,it's undispensible to take relevant courses online or at a university, focusing on statistics and machine learning. Learn programming languages like Python or R, and practice with data analysis tools like Excel and SQL. Engage in hands-on projects using real datasets, and enhance my data visualization skills with tools like Tableau. Communicate my findings clearly, build a portfolio on platforms like GitHub, and join data science communities for networking and mentorship. Stay updated on industry trends through blogs and webinars to ensure ongoing skill development.
+(5): As I mentioned in question 7, I don't think ChatBot has a serious flaw, at least ChatGPT.I always thought they are very useful for me. While they may have a lot of room for improvement in dealing with more complex issues.However, at least for me, it's enough.  
+
+9. Yes
