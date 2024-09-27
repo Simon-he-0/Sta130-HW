@@ -1,0 +1,707 @@
+To create histograms of `flipper_length_mm` for each species in the penguins dataset, while marking the mean, median, range, interquartile range (IQR), and the two standard deviations from the mean, you can use Plotly's `add_hline`, `add_vline`, `add_hrect`, and `add_vrect` functions.
+
+Below is a step-by-step implementation in Python using Plotly:
+
+```python
+import pandas as pd
+import plotly.graph_objects as go
+import plotly.express as px
+
+# Load the penguins dataset
+url = "https://raw.githubusercontent.com/allisonhorst/penguins/master/penguins.csv"
+penguins = pd.read_csv(url)
+
+# Prepare the species list
+species_list = penguins['species'].unique()
+
+# Create a Plotly figure
+fig = go.Figure()
+
+# Define colors for different species
+colors = px.colors.qualitative.Plotly
+
+for idx, species in enumerate(species_list):
+    species_data = penguins[penguins['species'] == species]
+    
+    # Calculate statistics
+    mean = species_data['flipper_length_mm'].mean()
+    median = species_data['flipper_length_mm'].median()
+    min_value = species_data['flipper_length_mm'].min()
+    max_value = species_data['flipper_length_mm'].max()
+    q1 = species_data['flipper_length_mm'].quantile(0.25)
+    q3 = species_data['flipper_length_mm'].quantile(0.75)
+    std_dev = species_data['flipper_length_mm'].std()
+    
+    # Create histogram
+    fig.add_trace(go.Histogram(
+        x=species_data['flipper_length_mm'],
+        name=species,
+        opacity=0.75,
+        marker_color=colors[idx],
+        histnorm='probability density'
+    ))
+    
+    # Add lines for mean and median
+    fig.add_vline(mean, line_color=colors[idx], line_dash="dash", name=f'{species} Mean')
+    fig.add_vline(median, line_color=colors[idx], line_dash="dot", name=f'{species} Median')
+    
+    # Add rectangles for range and IQR
+    fig.add_vrect(x0=min_value, x1=max_value, fillcolor=colors[idx], opacity=0.2, 
+                  annotation_text=f"{species} Range", annotation_position="top left")
+    fig.add_vrect(x0=q1, x1=q3, fillcolor=colors[idx], opacity=0.4, 
+                  annotation_text=f"{species} IQR", annotation_position="top right")
+    
+    # Add rectangles for ±2 standard deviations
+    fig.add_vrect(x0=mean - 2*std_dev, x1=mean + 2*std_dev, fillcolor=colors[idx],
+                  opacity=0.3, line_width=0, annotation_text=f"{species} ±2 Std Dev", 
+                  annotation_position="top center")
+
+# Update layout
+fig.update_layout(
+    title="Distribution of Flipper Length by Species",
+    xaxis_title="Flipper Length (mm)",
+    yaxis_title="Probability Density",
+    barmode='overlay',
+    legend_title="Species",
+    template="plotly_white"
+)
+
+# Show the figure
+fig.show()
+```
+
+### Explanation:
+
+1. **Loading Data**: The penguins dataset is loaded from a CSV file.
+
+2. **Loop Through Species**: The code iterates through each unique species in the dataset.
+
+3. **Calculate Statistics**: For each species, the mean, median, range, IQR, and standard deviation are calculated.
+
+4. **Create Histograms**: A histogram is added for each species' `flipper_length_mm` data.
+
+5. **Adding Lines and Rectangles**:
+   - **Vertical Lines**: The mean and median are marked with different line styles.
+   - **Rectangles**: The full range, IQR, and the area defined by ±2 standard deviations are highlighted with semi-transparent rectangles.
+
+6. **Layout**: The layout is updated for better visualization and readability, including titles and legends.
+
+7. **Display**: Finally, the figure is displayed using `fig.show()`.
+
+This approach gives a clear representation of the flipper lengths for different penguin species, while effectively marking important statistical measures.
+
+
+
+
+
+
+
+It looks like the URL for the penguins dataset has changed or is no longer accessible. We can use an alternative source or a built-in dataset from the seaborn library, which also includes the penguins dataset.
+
+Here’s how you can update the code to use the seaborn library instead:
+
+```python
+import pandas as pd
+import plotly.graph_objects as go
+import plotly.express as px
+import seaborn as sns
+
+# Load the penguins dataset from seaborn
+penguins = sns.load_dataset("penguins")
+
+# Prepare the species list
+species_list = penguins['species'].unique()
+
+# Create a Plotly figure
+fig = go.Figure()
+
+# Define colors for different species
+colors = px.colors.qualitative.Plotly
+
+for idx, species in enumerate(species_list):
+    species_data = penguins[penguins['species'] == species]
+    
+    # Calculate statistics
+    mean = species_data['flipper_length_mm'].mean()
+    median = species_data['flipper_length_mm'].median()
+    min_value = species_data['flipper_length_mm'].min()
+    max_value = species_data['flipper_length_mm'].max()
+    q1 = species_data['flipper_length_mm'].quantile(0.25)
+    q3 = species_data['flipper_length_mm'].quantile(0.75)
+    std_dev = species_data['flipper_length_mm'].std()
+    
+    # Create histogram
+    fig.add_trace(go.Histogram(
+        x=species_data['flipper_length_mm'],
+        name=species,
+        opacity=0.75,
+        marker_color=colors[idx],
+        histnorm='probability density'
+    ))
+    
+    # Add lines for mean and median
+    fig.add_vline(mean, line_color=colors[idx], line_dash="dash", name=f'{species} Mean', legendgroup=species)
+    fig.add_vline(median, line_color=colors[idx], line_dash="dot", name=f'{species} Median', legendgroup=species)
+    
+    # Add rectangles for range and IQR
+    fig.add_vrect(x0=min_value, x1=max_value, fillcolor=colors[idx], opacity=0.2, 
+                  annotation_text=f"{species} Range", annotation_position="top left", legendgroup=species)
+    fig.add_vrect(x0=q1, x1=q3, fillcolor=colors[idx], opacity=0.4, 
+                  annotation_text=f"{species} IQR", annotation_position="top right", legendgroup=species)
+    
+    # Add rectangles for ±2 standard deviations
+    fig.add_vrect(x0=mean - 2*std_dev, x1=mean + 2*std_dev, fillcolor=colors[idx],
+                  opacity=0.3, line_width=0, annotation_text=f"{species} ±2 Std Dev", 
+                  annotation_position="top center", legendgroup=species)
+
+# Update layout
+fig.update_layout(
+    title="Distribution of Flipper Length by Species",
+    xaxis_title="Flipper Length (mm)",
+    yaxis_title="Probability Density",
+    barmode='overlay',
+    legend_title="Species",
+    template="plotly_white"
+)
+
+# Show the figure
+fig.show()
+```
+
+### Key Changes:
+
+1. **Loading Data**: Instead of loading from a URL, the code now uses `sns.load_dataset("penguins")` to load the dataset from the seaborn library.
+
+2. **Legend Grouping**: I've added `legendgroup=species` to the line and rectangle annotations, ensuring that the legends are grouped by species for better clarity.
+
+This code should work without the HTTP error, providing the desired visualizations with the penguins dataset.
+
+
+
+
+
+
+The error you're encountering suggests that the annotation position `"top center"` is invalid for the rectangle shapes in Plotly. Instead, you can use valid positions like `"top left"` or `"top right"`.
+
+Here's the corrected code, removing the invalid annotation position and making sure all the annotations are positioned appropriately:
+
+```python
+import pandas as pd
+import plotly.graph_objects as go
+import plotly.express as px
+import seaborn as sns
+
+# Load the penguins dataset from seaborn
+penguins = sns.load_dataset("penguins")
+
+# Prepare the species list
+species_list = penguins['species'].unique()
+
+# Create a Plotly figure
+fig = go.Figure()
+
+# Define colors for different species
+colors = px.colors.qualitative.Plotly
+
+for idx, species in enumerate(species_list):
+    species_data = penguins[penguins['species'] == species]
+    
+    # Calculate statistics
+    mean = species_data['flipper_length_mm'].mean()
+    median = species_data['flipper_length_mm'].median()
+    min_value = species_data['flipper_length_mm'].min()
+    max_value = species_data['flipper_length_mm'].max()
+    q1 = species_data['flipper_length_mm'].quantile(0.25)
+    q3 = species_data['flipper_length_mm'].quantile(0.75)
+    std_dev = species_data['flipper_length_mm'].std()
+    
+    # Create histogram
+    fig.add_trace(go.Histogram(
+        x=species_data['flipper_length_mm'],
+        name=species,
+        opacity=0.75,
+        marker_color=colors[idx],
+        histnorm='probability density'
+    ))
+    
+    # Add lines for mean and median
+    fig.add_vline(mean, line_color=colors[idx], line_dash="dash", name=f'{species} Mean', legendgroup=species)
+    fig.add_vline(median, line_color=colors[idx], line_dash="dot", name=f'{species} Median', legendgroup=species)
+    
+    # Add rectangles for range and IQR
+    fig.add_vrect(x0=min_value, x1=max_value, fillcolor=colors[idx], opacity=0.2, 
+                  annotation_text=f"{species} Range", annotation_position="top left", legendgroup=species)
+    fig.add_vrect(x0=q1, x1=q3, fillcolor=colors[idx], opacity=0.4, 
+                  annotation_text=f"{species} IQR", annotation_position="top right", legendgroup=species)
+    
+    # Add rectangles for ±2 standard deviations
+    fig.add_vrect(x0=mean - 2*std_dev, x1=mean + 2*std_dev, fillcolor=colors[idx],
+                  opacity=0.3, line_width=0, annotation_text=f"{species} ±2 Std Dev", 
+                  annotation_position="top right", legendgroup=species)
+
+# Update layout
+fig.update_layout(
+    title="Distribution of Flipper Length by Species",
+    xaxis_title="Flipper Length (mm)",
+    yaxis_title="Probability Density",
+    barmode='overlay',
+    legend_title="Species",
+    template="plotly_white"
+)
+
+# Show the figure
+fig.show()
+```
+
+### Changes Made:
+1. **Annotation Position**: Changed the annotation position for the ±2 standard deviation rectangle to `"top right"`.
+
+This code should now work without any errors, providing the desired visualization for the penguins' flipper lengths by species. Let me know if you encounter any more issues!
+
+
+
+
+
+
+
+Certainly! To create a figure with seaborn kernel density estimation (KDE) plots organized in a row of three, we'll adjust the approach accordingly. Below is the code that achieves this by plotting KDEs for each species along with the mean, median, and various range indicators:
+
+```python
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Load the penguins dataset
+penguins = sns.load_dataset("penguins")
+
+# Prepare the species list
+species_list = penguins['species'].unique()
+
+# Create a figure with subplots
+fig, axes = plt.subplots(nrows=1, ncols=3, figsize=(18, 6))
+
+# Define colors for different species
+colors = sns.color_palette("Set2", len(species_list))
+
+for idx, species in enumerate(species_list):
+    species_data = penguins[penguins['species'] == species]
+    
+    # Calculate statistics
+    mean = species_data['flipper_length_mm'].mean()
+    median = species_data['flipper_length_mm'].median()
+    std_dev = species_data['flipper_length_mm'].std()
+    q1 = species_data['flipper_length_mm'].quantile(0.25)
+    q3 = species_data['flipper_length_mm'].quantile(0.75)
+
+    # Plot KDE
+    sns.kdeplot(data=species_data, x='flipper_length_mm', ax=axes[idx], color=colors[idx], fill=True, alpha=0.5)
+    
+    # Add vertical lines for mean and median
+    axes[idx].axvline(mean, color='black', linestyle='--', label=f'Mean: {mean:.2f}')
+    axes[idx].axvline(median, color='orange', linestyle=':', label=f'Median: {median:.2f}')
+    
+    # Add rectangles for IQR
+    axes[idx].add_patch(plt.Rectangle((q1, 0), q3-q1, axes[idx].get_ylim()[1], color=colors[idx], alpha=0.3, label='IQR'))
+    
+    # Add rectangles for ±2 standard deviations
+    axes[idx].add_patch(plt.Rectangle((mean - 2*std_dev, 0), 4*std_dev, axes[idx].get_ylim()[1], color=colors[idx], alpha=0.2, label='±2 Std Dev'))
+
+    # Set title and labels
+    axes[idx].set_title(f'{species} Flipper Length KDE')
+    axes[idx].set_xlabel('Flipper Length (mm)')
+    axes[idx].set_ylabel('Density')
+    axes[idx].legend()
+
+# Adjust layout
+plt.tight_layout()
+plt.suptitle("KDE Plots of Flipper Length by Species", fontsize=16)
+plt.subplots_adjust(top=0.88)  # Adjust title position
+plt.show()
+```
+
+### Explanation of the Code:
+1. **Data Loading**: The penguins dataset is loaded from seaborn.
+2. **Figure Setup**: A figure with three subplots (one for each species) is created.
+3. **KDE Plotting**: For each species:
+   - The KDE is plotted using `sns.kdeplot()`.
+   - Vertical lines for mean (dashed) and median (dotted) are added.
+   - Rectangles representing the interquartile range (IQR) and ±2 standard deviations are added for clarity.
+4. **Layout Adjustments**: The layout is adjusted to ensure titles and legends are clearly displayed.
+
+This will create a clear, organized row of KDE plots with all relevant statistics visually represented. Let me know if you need further modifications!
+
+
+
+
+
+Absolutely, your descriptions of box plots, histograms, and kernel density estimators (KDE) capture their essential characteristics well. Each method has its unique strengths and weaknesses when visualizing data distribution. Here's a breakdown of the pros and cons for each:
+
+### Box Plot
+
+**Pros:**
+- **Summary Statistics:** Clearly displays key summary statistics (min, max, median, quartiles).
+- **Outlier Detection:** Effectively identifies outliers in the dataset.
+- **Comparative Analysis:** Easily compares distributions across different groups or categories.
+- **Compact Representation:** Requires less space and is easy to interpret.
+
+**Cons:**
+- **Loss of Detail:** Does not provide information about the distribution shape or frequency of data points.
+- **Limited to Summary Values:** May mask important features, such as multimodality.
+- **Sensitive to Sample Size:** Can be misleading if sample sizes are very small.
+
+### Histogram
+
+**Pros:**
+- **Frequency Distribution:** Displays the frequency of data points across intervals, showing distribution shape.
+- **Detail on Modality:** Can reveal the modality (e.g., unimodal, bimodal) of the data.
+- **Intuitive Visualization:** Easy for most audiences to understand at a glance.
+
+**Cons:**
+- **Bin Size Sensitivity:** The choice of bin size can significantly affect the visualization, potentially obscuring important features.
+- **Overlapping Bins:** Can lead to ambiguity if not carefully constructed.
+- **Less Effective for Comparison:** Comparing multiple histograms can be challenging without normalization.
+
+### Kernel Density Estimator (KDE)
+
+**Pros:**
+- **Smooth Representation:** Provides a smooth curve that represents the probability density, making it easy to identify the underlying distribution.
+- **Detail on Distribution Shape:** Clearly shows features like peaks and troughs, indicating modality.
+- **Flexible Bandwidth Adjustment:** Allows tuning of bandwidth to adjust the smoothness of the curve.
+
+**Cons:**
+- **Bandwidth Sensitivity:** The choice of bandwidth can greatly influence the appearance and interpretation of the density estimate.
+- **Computational Complexity:** More computationally intensive than histograms and box plots, especially for large datasets.
+- **Potential Misleading Interpretation:** May imply continuity in data that is inherently discrete, leading to misinterpretation.
+
+### Conclusion
+
+In summary, each visualization method has its place depending on the context of the data and the specific insights you want to gain. Box plots are great for summarizing key statistics and identifying outliers, histograms provide detailed frequency distributions, and KDE offers a smooth representation of data density. Selecting the right method will depend on the aspects of the data you wish to emphasize.
+
+
+
+
+
+
+
+The relationship between the mean and median is closely tied to the skewness of a distribution. Here’s a breakdown of how these concepts relate:
+
+### General Relationships
+
+1. **Right Skewness (Positive Skewness):**
+   - In a right-skewed distribution, the tail on the right side is longer or fatter than on the left side.
+   - **Mean > Median:** The mean is pulled in the direction of the tail, resulting in the mean being greater than the median. This occurs because the higher values in the tail raise the average more than they influence the median.
+
+2. **Left Skewness (Negative Skewness):**
+   - In a left-skewed distribution, the tail on the left side is longer or fatter than on the right side.
+   - **Mean < Median:** The mean is dragged down by the lower values in the tail, making it less than the median. The median, being the middle value, is less affected by extreme values on the left.
+
+3. **Symmetric Distribution:**
+   - In a perfectly symmetric distribution (like a normal distribution), the mean and median are equal (Mean = Median).
+
+### Why This Happens
+
+- The **mean** is sensitive to extreme values (outliers) because it considers all data points. In a skewed distribution, extreme values on one side can significantly affect the average.
+- The **median**, on the other hand, represents the middle value of the dataset and is less affected by extreme values. It merely depends on the position of values rather than their magnitude.
+
+### Visualizing the Concepts
+
+- **Right Skewed:** If you visualize a right-skewed distribution, you’ll see many lower values and a few very high values extending the tail to the right, pulling the mean to the right of the median.
+- **Left Skewed:** Conversely, in a left-skewed distribution, there are many higher values and a few very low values extending the tail to the left, pulling the mean to the left of the median.
+
+Understanding these relationships helps in interpreting the characteristics of a dataset and in selecting appropriate measures of central tendency based on its skewness.
+
+
+
+
+
+
+
+
+### Code Explanation
+
+The provided code performs the following tasks:
+
+1. **Import Libraries:**
+   - It imports necessary libraries: `scipy.stats` for statistical distributions, `pandas` for data manipulation, and `numpy` for numerical operations.
+
+2. **Generate Random Samples:**
+   - `sample1`: A sample of 1,000 random values is generated from a gamma distribution with shape parameter \( a = 2 \) and scale parameter \( = 2 \). This distribution is typically right-skewed.
+   - `sample2`: A second sample is created by taking the negative of the first sample, effectively reflecting it across the y-axis. This transformation will make the distribution left-skewed.
+
+3. **Visualization:**
+   - A histogram of `sample1` is created using Plotly Express to visualize the distribution of the generated data.
+
+4. **Calculate Statistics:**
+   - The mean of `sample1` is computed using `sample1.mean()`.
+   - The median is calculated using `np.quantile(sample1, [0.5])`, which returns the 50th percentile (the median).
+
+### Relationship Between Mean, Median, and Skewness
+
+- **Right Skewness (Positive Skewness):** In the case of `sample1`, which comes from a right-skewed gamma distribution, the mean will be greater than the median. This occurs because the tail on the right side pulls the mean upwards, while the median, as the middle value, remains less affected by extreme values.
+
+- **Left Skewness (Negative Skewness):** For `sample2`, which is the negative of `sample1`, the distribution becomes left-skewed. Here, the mean will be less than the median. The left tail, which extends further, drags the mean down, while the median still reflects the middle of the distribution.
+
+### Causes of the Relationships
+
+The mean is sensitive to extreme values (outliers) because it takes all data points into account. In contrast, the median, which only considers the position of values, remains stable despite extreme values. Therefore, in skewed distributions:
+
+- **Right-skewed distributions** have a long right tail that raises the mean above the median.
+- **Left-skewed distributions** have a long left tail that pulls the mean below the median.
+
+Understanding this relationship helps in data analysis, allowing for better insights into the data’s central tendency and distribution shape.
+
+
+
+
+
+
+
+To extend the code for demonstrating the relationship between the mean, median, and skewness, we can visualize both the original right-skewed data (`sample1`) and the left-skewed data (`sample2`). We’ll add histograms for both samples, indicate their means and medians on the plots, and show how these statistics relate to the skewness of each distribution.
+
+Here’s the extended code:
+
+```python
+from scipy import stats
+import pandas as pd
+import numpy as np
+import plotly.express as px
+import plotly.graph_objects as go
+
+# Generate random samples
+sample1 = stats.gamma(a=2, scale=2).rvs(size=1000)  # Right-skewed
+sample2 = -stats.gamma(a=2, scale=2).rvs(size=1000)  # Left-skewed
+
+# Calculate means and medians
+mean1 = sample1.mean()
+median1 = np.quantile(sample1, [0.5])
+mean2 = sample2.mean()
+median2 = np.quantile(sample2, [0.5])
+
+# Create histograms for both samples
+fig = make_subplots(rows=1, cols=2, subplot_titles=("Right-Skewed Distribution", "Left-Skewed Distribution"))
+
+# Right-skewed histogram
+fig.add_trace(go.Histogram(x=sample1, nbinsx=30, name='Sample 1', marker=dict(line=dict(color='black', width=1))),
+                  row=1, col=1)
+fig.add_annotation(x=mean1, y=50, text="Mean", showarrow=True, arrowhead=2, row=1, col=1)
+fig.add_annotation(x=median1, y=50, text="Median", showarrow=True, arrowhead=2, row=1, col=1)
+
+# Left-skewed histogram
+fig.add_trace(go.Histogram(x=sample2, nbinsx=30, name='Sample 2', marker=dict(line=dict(color='black', width=1))),
+                  row=1, col=2)
+fig.add_annotation(x=mean2, y=50, text="Mean", showarrow=True, arrowhead=2, row=1, col=2)
+fig.add_annotation(x=median2, y=50, text="Median", showarrow=True, arrowhead=2, row=1, col=2)
+
+# Update layout
+fig.update_layout(height=400, width=800, title_text="Comparison of Right-Skewed and Left-Skewed Distributions")
+fig.update_xaxes(title_text="Value")
+fig.update_yaxes(title_text="Frequency")
+
+# Show the figure
+fig.show()
+```
+
+### Explanation of the Extended Code
+
+1. **Data Generation:**
+   - Two samples are generated: `sample1` (right-skewed) and `sample2` (left-skewed) using a gamma distribution and its negative.
+
+2. **Statistics Calculation:**
+   - The mean and median for both samples are calculated.
+
+3. **Visualization:**
+   - A single figure with two subplots is created to display the histograms of both samples side by side.
+   - For each histogram, we add annotations to indicate the mean and median, helping to visualize their positions relative to each distribution.
+
+4. **Annotations:**
+   - The `go.Histogram` function is used to create histograms, and `add_annotation` is employed to label the mean and median on the plots.
+
+### Result Interpretation
+
+- **Right-Skewed Distribution:** In the left subplot, you’ll observe that the mean is greater than the median, highlighting the influence of the right tail.
+  
+- **Left-Skewed Distribution:** In the right subplot, the mean is less than the median, demonstrating the effect of the left tail.
+
+This code effectively visualizes and clarifies the relationship between mean, median, and skewness, reinforcing the concepts discussed earlier.
+
+
+
+
+
+
+Certainly! Here’s a complete code snippet that combines data loading, summary statistics, and visualizations for both the federal holidays and proposed federal holidays datasets. 
+
+Make sure you have `pandas`, `matplotlib`, and `seaborn` installed in your Python environment. You can install them using pip if you haven't done so already:
+
+```bash
+pip install pandas matplotlib seaborn
+```
+
+### Complete Code
+
+```python
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Step 1: Load the data from GitHub
+federal_holidays = pd.read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2024/2024-06-18/federal_holidays.csv')
+proposed_federal_holidays = pd.read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2024/2024-06-18/proposed_federal_holidays.csv')
+
+# Step 2: Summary Statistics
+print("Federal Holidays Summary:")
+print(federal_holidays.describe(include='all'))
+
+print("\nProposed Federal Holidays Summary:")
+print(proposed_federal_holidays.describe(include='all'))
+
+# Step 3: Data Visualization for Federal Holidays
+# Convert date column to datetime
+federal_holidays['date'] = pd.to_datetime(federal_holidays['date'])
+
+# Count of federal holidays by month
+federal_holidays['month'] = federal_holidays['date'].dt.month_name()
+holiday_counts = federal_holidays['month'].value_counts()
+
+# Plotting the count of holidays by month
+plt.figure(figsize=(10, 6))
+sns.barplot(x=holiday_counts.index, y=holiday_counts.values, palette='viridis')
+plt.title('Count of Federal Holidays by Month')
+plt.xlabel('Month')
+plt.ylabel('Number of Holidays')
+plt.xticks(rotation=45)
+plt.show()
+
+# Step 4: Data Visualization for Proposed Federal Holidays
+# Convert date column to datetime for proposed holidays
+proposed_federal_holidays['date'] = pd.to_datetime(proposed_federal_holidays['date'])
+
+# Count of proposed federal holidays by month
+proposed_federal_holidays['month'] = proposed_federal_holidays['date'].dt.month_name()
+proposed_holiday_counts = proposed_federal_holidays['month'].value_counts()
+
+# Plotting the count of proposed holidays by month
+plt.figure(figsize=(10, 6))
+sns.barplot(x=proposed_holiday_counts.index, y=proposed_holiday_counts.values, palette='pastel')
+plt.title('Count of Proposed Federal Holidays by Month')
+plt.xlabel('Month')
+plt.ylabel('Number of Proposed Holidays')
+plt.xticks(rotation=45)
+plt.show()
+```
+
+### Explanation
+
+1. **Data Loading**: The script loads both datasets from GitHub.
+2. **Summary Statistics**: It prints out summary statistics for both the federal holidays and proposed federal holidays datasets.
+3. **Data Visualization**:
+   - It converts the `date` column to datetime format.
+   - It counts the number of holidays by month and visualizes these counts using bar plots.
+
+### Running the Code
+
+Run the entire code in a Python environment (like Jupyter Notebook, Google Colab, or any Python IDE) to see the results. You will get the summary statistics printed in the console and two visualizations showing the counts of federal and proposed holidays by month. Let me know if you need any further modifications or analyses!
+
+
+
+
+
+
+
+
+The warning you're encountering is due to the way Seaborn's `barplot` handles the `palette` parameter when there's no `hue` assigned. To resolve this, you can assign `x` to `hue` and set `legend=False` for the same visual effect.
+
+Here’s the updated code with these adjustments:
+
+### Updated Code with Fixed Bar Plot Warnings
+
+```python
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import re
+
+# Step 1: Load the data from GitHub
+federal_holidays = pd.read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2024/2024-06-18/federal_holidays.csv')
+proposed_federal_holidays = pd.read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2024/2024-06-18/proposed_federal_holidays.csv')
+
+# Function to normalize date strings
+def normalize_dates(date_string):
+    # Handle ranges like "January 15–21"
+    if '–' in date_string:
+        month, days = date_string.split(' ', 1)
+        day_start = int(re.search(r'\d+', days).group())
+        # Create a standard date (assuming the first day of the range)
+        return f"{month} {day_start}"
+    return date_string
+
+# Function to clean and convert date columns
+def clean_and_convert_dates(df, date_column):
+    print(f"\nChecking for missing or invalid dates in {date_column}:")
+    print(df[date_column].isnull().sum())
+    print(df[date_column].unique())
+    
+    # Normalize the dates
+    df[date_column] = df[date_column].apply(normalize_dates)
+    
+    # Remove rows with null dates
+    df = df[df[date_column].notnull()]
+    
+    # Convert date column to datetime
+    df[date_column] = pd.to_datetime(df[date_column] + " 2024", format='%B %d %Y', errors='coerce')  # Adding year for conversion
+    
+    # Drop rows with NaT values after conversion
+    if df[date_column].isnull().sum() > 0:
+        print("Warning: Some dates were converted to NaT due to invalid format.")
+        df = df.dropna(subset=[date_column])
+    
+    return df
+
+# Clean and convert the date columns
+federal_holidays = clean_and_convert_dates(federal_holidays, 'date')
+proposed_federal_holidays = clean_and_convert_dates(proposed_federal_holidays, 'date')
+
+# Step 3: Data Visualization for Federal Holidays
+# Count of federal holidays by month
+federal_holidays['month'] = federal_holidays['date'].dt.month_name()
+holiday_counts = federal_holidays['month'].value_counts()
+
+# Plotting the count of holidays by month
+plt.figure(figsize=(10, 6))
+sns.barplot(x=holiday_counts.index, y=holiday_counts.values, palette='viridis', hue=holiday_counts.index, legend=False)
+plt.title('Count of Federal Holidays by Month')
+plt.xlabel('Month')
+plt.ylabel('Number of Holidays')
+plt.xticks(rotation=45)
+plt.show()
+
+# Step 4: Data Visualization for Proposed Federal Holidays
+# Count of proposed federal holidays by month
+proposed_federal_holidays['month'] = proposed_federal_holidays['date'].dt.month_name()
+proposed_holiday_counts = proposed_federal_holidays['month'].value_counts()
+
+# Plotting the count of proposed holidays by month
+plt.figure(figsize=(10, 6))
+sns.barplot(x=proposed_holiday_counts.index, y=proposed_holiday_counts.values, palette='pastel', hue=proposed_holiday_counts.index, legend=False)
+plt.title('Count of Proposed Federal Holidays by Month')
+plt.xlabel('Month')
+plt.ylabel('Number of Proposed Holidays')
+plt.xticks(rotation=45)
+plt.show()
+```
+
+### Key Changes Made
+
+1. **Added `hue` Parameter**: The `hue` parameter in `sns.barplot()` has been set to `holiday_counts.index` (and similarly for proposed holidays) to match the x-axis data.
+2. **Set `legend=False`**: This disables the legend since it's unnecessary for this specific visualization.
+
+### Running the Code
+
+Run this updated code in your Python environment. The warnings should be resolved, and the plots should display correctly. Let me know if you need any more adjustments or if you encounter further issues!
+
+
+
+
+
+
+
